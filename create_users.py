@@ -7,28 +7,32 @@ client = boto3.client('cognito-idp')
 
 
 def create_cognito_user(UserPoolId,Username,Email,TemporaryPassword):
-    response = client.admin_create_user(
-        UserPoolId=UserPoolId,
-        Username=Username,
-        UserAttributes=[
-            {
-                'Name': 'email_verified',
-                'Value': 'true'
-            },
-            {
-                'Name': 'email',
-                'Value': Email
-            },
-        ],
-        ValidationData=[
-            {
-                'Name': 'string',
-                'Value': 'string'
-            },
-        ],
-        TemporaryPassword=TemporaryPassword,
-        ForceAliasCreation=False
-    )
+    try:
+        response = client.admin_create_user(
+            UserPoolId=UserPoolId,
+            Username=Username,
+            UserAttributes=[
+                {
+                    'Name': 'email_verified',
+                    'Value': 'true'
+                },
+                {
+                    'Name': 'email',
+                    'Value': Email
+                },
+            ],
+            ValidationData=[
+                {
+                    'Name': 'string',
+                    'Value': 'string'
+                },
+            ],
+            TemporaryPassword=TemporaryPassword,
+            ForceAliasCreation=False
+        )
+    except client.exceptions.UsernameExistsException:
+        logging.info('User : {} with Email : {} Already Exists'.format(Username,Email))
+        return True
     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
         logging.info('User : {} created with Email : {} '.format(Username,Email))
         return True
@@ -37,7 +41,7 @@ def create_cognito_user(UserPoolId,Username,Email,TemporaryPassword):
 
 def main():
     create_cognito_user(
-        'us-east-1_NJ4Igmpd9',
+        'us-east-1_U8l3Pliwm',
         'ashwinkumarnaik91',
         'ashwinkumarnaik91@gmail.com',
         'TestP@ssw0rd@321'
