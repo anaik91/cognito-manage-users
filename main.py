@@ -5,9 +5,6 @@ import manage_cognito_resources
 import logging 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-def banner():
-    print('#'*100)
-
 def main():
     USER_POOL_ID = os.getenv('USER_POOL_ID')
     if USER_POOL_ID is None:
@@ -31,9 +28,6 @@ def main():
     cognito_user_group_map = {}
     for c_user in cognito_users:
         cognito_user_group_map[c_user] = manage_cognito_resources.get_cognito_groups_for_user(c_user,USER_POOL_ID)
-    
-    # print(groups)
-    # print(cognito_groups)
 
     if not utils.compare_list(groups,cognito_groups):
         if len(groups) > len(cognito_groups):
@@ -58,26 +52,10 @@ def main():
     else:
         logging.info('No Change in Users')
 
-    # banner()
-    # print(user_group_map)
-    # banner()
-    # print(cognito_user_group_map)
-    # banner()
-    # print(group_map)
-    # banner()
-    # print(list(usermap.keys()))
-    # banner()
-    # print(cognito_users)
-    # banner()
-    # print(config_source)
-    # print(usermap.keys())
-    # print(cognito_users)
-
     for user in usermap.keys() if config_source else cognito_users:
         if not utils.compare_list(user_group_map[user],cognito_user_group_map[user]):
             if len(user_group_map[user]) > len(cognito_user_group_map[user]):
                 for group in user_group_map[user]:
-                    #username = list(user.keys())[0]
                     manage_cognito_resources.add_user_to_group(USER_POOL_ID,user,group)
             else:
                 for group in utils.diff_list(cognito_user_group_map[user],user_group_map[user]):
