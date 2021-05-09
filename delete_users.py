@@ -30,10 +30,10 @@ def delete_cognito_user(UserPoolId,Username):
         return False
 
 def main():
-    delete_cognito_user(
-        'us-east-1_U8l3Pliwm',
-        'ashwinkumarnaik91'
-    )
+    # delete_cognito_user(
+    #     'us-east-1_U8l3Pliwm',
+    #     'ashwinkumarnaik91'
+    # )
 
 if __name__ == '__main__':
     main()
